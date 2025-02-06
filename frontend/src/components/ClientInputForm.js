@@ -26,30 +26,35 @@ const ClientInputForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch("/api/submit-project", {
+            const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"; // Use env variable
+    
+            const response = await fetch(`${API_BASE_URL}/projects`, {  // Update API URL
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
-            if (response.ok) {
-                alert("Project submitted successfully!");
-                setFormData({
-                    clientName: "",
-                    clientEmail: "",
-                    clientCompany: "",
-                    projectName: "",
-                    projectDescription: "",
-                    timeCommitment: "Yes",
-                    purchasingRequired: "No",
-                    ndaRequired: "No",
-                    showcaseApproval: "Yes",
-                    semester: "Winter Term",
-                });
-            } else {
-                alert("Submission failed.");
+    
+            if (!response.ok) {
+                throw new Error("Failed to submit project");
             }
+    
+            alert("Project submitted successfully!");
+            setFormData({
+                clientName: "",
+                clientEmail: "",
+                clientCompany: "",
+                projectName: "",
+                projectDescription: "",
+                timeCommitment: "Yes",
+                purchasingRequired: "No",
+                ndaRequired: "No",
+                showcaseApproval: "Yes",
+                semester: "Winter Term",
+            });
+    
         } catch (error) {
             console.error("Error submitting form:", error);
+            alert("Submission failed.");
         }
     };
 
