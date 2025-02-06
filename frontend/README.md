@@ -12,7 +12,7 @@ Ensure you have the following installed:
 - **Node.js** (v14 or later recommended)
 - **npm** or **yarn**
 
-### **2. Installation**
+### 🛠️**2. Installation**
 Clone the repository and navigate to the frontend directory:
 
 ```sh
@@ -53,24 +53,28 @@ The app will run at **http://localhost:3000**
 
 ---
 
-## **Project Structure**
+## 📂 **Project Structure**
+
 ```
 frontend/
-│── public/                  # Static files
-│── src/
-│   ├── components/          # React UI components
-│   ├── pages/               # Page components
-│   ├── api.js               # API calls to backend
-│   ├── App.js               # Main application file
-│   ├── index.js             # Entry point for React
-│   └── .env                 # Environment variables
-├── package.json             # Dependencies & scripts
-└── README.md                # Documentation
+│-- src/
+│   │-- components/
+│   │   ├── ClientInputForm.js
+│   │   ├── Footer.js
+│   │   ├── Navbar.js
+│   │   ├── ProjectList.js
+│   │-- api.js
+│   │-- App.js
+│   │-- index.js
+│-- public/
+│-- .env
+│-- package.json
+│-- README.md
 ```
 
 ---
 
-## **Features**
+## 🚀 **Features**
 - **Submit Projects:** Users can submit project details through a form.
 - **View Projects:** Projects are displayed in a list format.
 - **Update Projects:** Users can edit project details.
@@ -79,7 +83,7 @@ frontend/
 
 ---
 
-## **API Endpoints Used**
+## 📌 **API Endpoints Used**
 | Method | Endpoint                  | Description |
 |--------|----------------------------|-------------|
 | GET    | `/api/projects`            | Fetch all active projects |
@@ -102,12 +106,36 @@ This generates an optimized build in the `/build` directory.
 
 ---
 
+## 📜 Components Breakdown
+
+- **`ClientInputForm.js`** - Handles project submission via form input.
+- **`ProjectList.js`** - Displays a list of projects and allows editing/deletion.
+- **`Navbar.js`** - Provides navigation for the app.
+- **`Footer.js`** - Displays the footer section.
+
 ## **Troubleshooting**
 1. **Missing Dependencies:** Run `npm install` or `yarn install`.
 2. **Backend Not Running:** Ensure the backend is started (`npm run dev` in `/backend`).
 3. **API Not Connecting:** Check `.env` file and confirm the correct API URL.
 
 ---
+
+## ✨ Technologies Used
+
+- **React.js** (Hooks, Functional Components)
+- **Material-UI** (UI Components)
+- **React Router** (Client-side routing)
+- **Axios & Fetch API** (API calls)
+- **Environment Variables** (`.env` for configuration)
+
+## 📌 Development Commands
+
+| Command           | Description                             |
+|------------------|-------------------------------------|
+| `npm install`    | Install dependencies               |
+| `npm start`      | Run development server             |
+| `npm run build`  | Build the project for production   |
+
 
 ## **Contributing**
 1. Fork the repository.
@@ -117,6 +145,11 @@ This generates an optimized build in the `/build` directory.
 5. Submit a pull request.
 
 ---
+## 📜 License
 
-## **License**
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
+
+---
+
+📌 **Developed by:** Deval Bhungaliya 
+🔗 **GitHub:** [GitHub Link](https://github.com/bhun0002/project-nexus)

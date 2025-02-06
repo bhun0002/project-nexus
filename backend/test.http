@@ -38,5 +38,5 @@ Content-Type: application/json
 }
 
 ### 🔹 Delete a Project by ID (Replace `PROJECT_ID`)
-DELETE http://localhost:5000/api/projects/PROJECT_ID
+DELETE http://localhost:5000/api/projects/67a4f97179f93bce6c01bf38
 Accept: application/json
