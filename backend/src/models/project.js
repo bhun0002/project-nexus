@@ -10,7 +10,8 @@ const projectSchema = new mongoose.Schema({
   purchasingRequired: { type: String, required: true },
   ndaRequired: { type: String, required: true },
   showcaseApproval: { type: String, required: true },
-  semester: { type: String, required: true }
+  semester: { type: String, required: true },
+  isDeleted: { type: Boolean, default: false } // ✅ Soft delete flag
 }, { timestamps: true }); // ✅ Adds createdAt and updatedAt
 
 module.exports = mongoose.model("Project", projectSchema);

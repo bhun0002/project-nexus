@@ -12,10 +12,22 @@ exports.createProject = async (req, res) => {
     }
 };
 
-// Get all projects
+// Get all projects (Only active projects, sorted by newest first)
+// exports.getAllProjects = async (req, res) => {
+//     try {
+//         const projects = await Project.find({ isDeleted: false });
+//         res.json(projects);
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
+
 exports.getAllProjects = async (req, res) => {
     try {
-        const projects = await Project.find();
+        const projects = await Project.find({
+            $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }]
+        }).sort({ createdAt: -1 });
+
         res.json(projects);
     } catch (err) {
         res.status(500).json({ error: err.message });

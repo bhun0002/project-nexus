@@ -16,7 +16,8 @@ Content-Type: application/json
   "purchasingRequired": "No",
   "ndaRequired": "Yes",
   "showcaseApproval": "Yes",
-  "semester": "Winter Term"
+  "semester": "Winter Term",
+  "isDeleted": "false"
 }
 
 ### 🔹 Get All Projects
