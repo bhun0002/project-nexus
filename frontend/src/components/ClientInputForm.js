@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     TextField, Button, Radio, RadioGroup, FormControlLabel,
     FormControl, FormLabel, Select, MenuItem, Typography,
     Container, Paper
 } from "@mui/material";
 
-const ClientInputForm = () => {
+
+import { useNavigate } from "react-router-dom"; // ✅ Ensure this is imported
+
+const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
+    const navigate = useNavigate();
+    
+    // ✅ Auto-fill Client Name and Email if user is logged in
     const [formData, setFormData] = useState({
-        clientName: "",
-        clientEmail: "",
+        clientName: user?.name || "",
+        clientEmail: user?.email || "",
         clientCompany: "",
         projectName: "",
         projectDescription: "",
@@ -19,6 +25,16 @@ const ClientInputForm = () => {
         semester: "Winter Term",
     });
 
+    useEffect(() => {
+        if (user) {
+            setFormData((prev) => ({
+                ...prev,
+                clientName: user.name,
+                clientEmail: user.email
+            }));
+        }
+    }, [user]);
+
     const handleChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
@@ -26,32 +42,21 @@ const ClientInputForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"; // Use env variable
-    
-            const response = await fetch(`${API_BASE_URL}/projects`, {  // Update API URL
+            const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+
+            const response = await fetch(`${API_BASE_URL}/projects`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
-    
+
             if (!response.ok) {
                 throw new Error("Failed to submit project");
             }
-    
+
             alert("Project submitted successfully!");
-            setFormData({
-                clientName: "",
-                clientEmail: "",
-                clientCompany: "",
-                projectName: "",
-                projectDescription: "",
-                timeCommitment: "Yes",
-                purchasingRequired: "No",
-                ndaRequired: "No",
-                showcaseApproval: "Yes",
-                semester: "Winter Term",
-            });
-    
+            navigate("/projects");  // ✅ Redirect to projects list after submission
+
         } catch (error) {
             console.error("Error submitting form:", error);
             alert("Submission failed.");
@@ -70,8 +75,11 @@ const ClientInputForm = () => {
                     required fields to proceed.
                 </Typography>
                 <form onSubmit={handleSubmit}>
-                    <TextField fullWidth label="Client Name" name="clientName" value={formData.clientName} onChange={handleChange} required margin="normal" />
-                    <TextField fullWidth label="Client Email Address" type="email" name="clientEmail" value={formData.clientEmail} onChange={handleChange} required margin="normal" />
+                  
+                    {/* ✅ Read-Only Client Name & Email */}
+                    <TextField fullWidth label="Client Name" name="clientName" value={formData.clientName} disabled margin="normal" />
+                    <TextField fullWidth label="Client Email Address" type="email" name="clientEmail" value={formData.clientEmail} disabled margin="normal" />
+
                     <TextField fullWidth label="Client Company" name="clientCompany" value={formData.clientCompany} onChange={handleChange} required margin="normal" />
                     <TextField fullWidth label="Project Name" name="projectName" value={formData.projectName} onChange={handleChange} required margin="normal" />
 

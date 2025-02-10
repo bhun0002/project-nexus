@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const connectDB = require("./database/db");
 const projectRoutes = require("./routes/projectRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -21,6 +22,7 @@ connectDB();
 
 // Routes
 app.use("/api/projects", projectRoutes);
+app.use("/api/auth", authRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, { 

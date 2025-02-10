@@ -1,3 +1,24 @@
+### User Signup (Register a new user)
+
+POST http://localhost:5000/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Deval B",
+  "email": "john@example.com",
+  "contactNumber": "1234567890",
+  "password": "password123",
+  "confirmPassword": "password123"
+}
+### User Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+
 ### 🚀 Test Server is Running
 GET http://localhost:5000/
 Accept: application/json
