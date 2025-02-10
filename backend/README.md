@@ -35,7 +35,7 @@ Ensure you have **Node.js**, **MongoDB**, and **npm** installed.
 
 ### 2️⃣ Clone the Repository
 ```bash
-git clone https://github.com/your-username/project-nexus.git
+git clone https://github.com/bhun0002/project-nexus.git
 cd project-nexus/backend
 ```
 

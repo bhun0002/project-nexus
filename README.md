@@ -71,7 +71,7 @@ Project-Nexus/
 
 ### Clone the Repository
 ```sh
-git clone https://github.com/your-repo/project-nexus.git
+git clone https://github.com/bhun0002/project-nexus.git
 cd project-nexus
 ```
 
