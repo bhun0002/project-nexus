@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { signup } from "../api";
+import { useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
     TextField, Button, Container, Paper, Typography,
-    CircularProgress
+    CircularProgress, InputAdornment, IconButton
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+
+
 
 const Signup = ({ setUser }) => {  // ✅ Receive setUser from App.js
     const navigate = useNavigate();
@@ -19,6 +22,9 @@ const Signup = ({ setUser }) => {  // ✅ Receive setUser from App.js
 
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -58,7 +64,9 @@ const Signup = ({ setUser }) => {  // ✅ Receive setUser from App.js
 
             // ✅ Highlight email field if the email is already registered
             if (error.error === "Email already registered") {
-                tempErrors.email = "This email is already registered. Try logging in.";
+                // tempErrors.email = "This email is already registered. Try logging in.";
+                alert("Email already registered. Redirecting to login...");
+                navigate("/login");
             } else {
                 tempErrors.general = "Error signing up! Please try again.";
             }
@@ -67,6 +75,11 @@ const Signup = ({ setUser }) => {  // ✅ Receive setUser from App.js
         } finally {
             setLoading(false);
         }
+    };
+
+    // ✅ Handle Login Redirect Using useNavigate
+    const handleLoginRedirect = () => {
+        navigate("/login");
     };
 
     return (
@@ -114,7 +127,7 @@ const Signup = ({ setUser }) => {  // ✅ Receive setUser from App.js
                         helperText={errors.contactNumber}
                     />
 
-                    <TextField
+                    {/* <TextField
                         label="Password"
                         name="password"
                         type="password"
@@ -124,9 +137,9 @@ const Signup = ({ setUser }) => {  // ✅ Receive setUser from App.js
                         onChange={handleChange}
                         error={!!errors.password}
                         helperText={errors.password}
-                    />
+                    /> */}
 
-                    <TextField
+                    {/* <TextField
                         label="Confirm Password"
                         name="confirmPassword"
                         type="password"
@@ -136,6 +149,55 @@ const Signup = ({ setUser }) => {  // ✅ Receive setUser from App.js
                         onChange={handleChange}
                         error={!!errors.confirmPassword}
                         helperText={errors.confirmPassword}
+                    /> */}
+
+
+                      {/* Updated Password Field with slotProps.input */}
+                      <TextField
+                        label="Password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        variant="outlined"
+                        fullWidth
+                        value={formData.password}
+                        onChange={handleChange}
+                        error={!!errors.password}
+                        helperText={errors.password}
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            },
+                        }}
+                    />
+
+                    {/* Updated Confirm Password Field with slotProps.input */}
+                    <TextField
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        variant="outlined"
+                        fullWidth
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        error={!!errors.confirmPassword}
+                        helperText={errors.confirmPassword}
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            },
+                        }}
                     />
 
                     {/* General Form Error Message */}
@@ -151,6 +213,18 @@ const Signup = ({ setUser }) => {  // ✅ Receive setUser from App.js
                     >
                         {loading ? <CircularProgress size={24} color="inherit" /> : "Sign Up"}
                     </Button>
+
+                    {/* ✅ Login Button Instead of Link */}
+                    <Typography align="center" style={{ marginTop: 10 }}>
+                        Already have an account?{" "}
+                        <Button
+                            color="primary"
+                            style={{ fontWeight: "bold", textTransform: "none" }}
+                            onClick={handleLoginRedirect}
+                        >
+                            Log in here
+                        </Button>
+                    </Typography>
                 </form>
             </Paper>
         </Container>
