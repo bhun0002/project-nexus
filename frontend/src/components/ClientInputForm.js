@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import {
     TextField, Button, Radio, RadioGroup, FormControlLabel,
     FormControl, FormLabel, Select, MenuItem, Typography,
-    Container, Paper
+    Container, Paper, Box 
 } from "@mui/material";
 
 
-import { useNavigate } from "react-router-dom"; // ✅ Ensure this is imported
+import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate for navigation
 
 const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
     const navigate = useNavigate();
-    
-    // ✅ Auto-fill Client Name and Email if user is logged in
+
+    // ✅ Initialize form state with user details
     const [formData, setFormData] = useState({
         clientName: user?.name || "",
         clientEmail: user?.email || "",
@@ -25,6 +25,7 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
         semester: "Winter Term",
     });
 
+    // ✅ Ensure that user details are set when available
     useEffect(() => {
         if (user) {
             setFormData((prev) => ({
@@ -35,10 +36,12 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
         }
     }, [user]);
 
+    // ✅ Handle input change events
     const handleChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
+    // ✅ Handle form submission
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -54,8 +57,9 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                 throw new Error("Failed to submit project");
             }
 
+            // ✅ Show confirmation and redirect to projects page
             alert("Project submitted successfully!");
-            navigate("/projects");  // ✅ Redirect to projects list after submission
+            navigate("/projects");  // ✅ Redirect after successful submission
 
         } catch (error) {
             console.error("Error submitting form:", error);
@@ -66,6 +70,17 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
     return (
         <Container maxWidth="md">
             <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+                {/* ✅ "My Projects" Button at the Top */}
+                <Box display="flex" justifyContent="flex-end" marginBottom={2}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => navigate("/projects")}
+                    >
+                        My Projects
+                    </Button>
+                </Box>
+
                 <Typography variant="h4" gutterBottom>
                     Software Development Project Request
                 </Typography>
@@ -75,7 +90,7 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                     required fields to proceed.
                 </Typography>
                 <form onSubmit={handleSubmit}>
-                  
+
                     {/* ✅ Read-Only Client Name & Email */}
                     <TextField fullWidth label="Client Name" name="clientName" value={formData.clientName} disabled margin="normal" />
                     <TextField fullWidth label="Client Email Address" type="email" name="clientEmail" value={formData.clientEmail} disabled margin="normal" />
@@ -104,20 +119,6 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                             by the student team.
                         </Typography>
                     </FormControl>
-
-
-                    {/* <FormControl fullWidth margin="normal">
-                        <FormLabel>Description of Project *</FormLabel>
-                        <Typography variant="body2" color="textSecondary">
-                            We do not need full requirements; this description will be used to advertise
-                            your project to students during the matching process. Please provide 3-5
-                            sentences about what you are looking to achieve, specifying whether this builds
-                            on an existing product or is a new development. If you are aware of the
-                            technology used, please include those details as well. Full requirements will
-                            be gathered by the student team.
-                        </Typography>
-                        <TextField fullWidth name="projectDescription" value={formData.projectDescription} onChange={handleChange} multiline rows={4} required margin="normal" />
-                    </FormControl> */}
 
                     <FormControl component="fieldset" margin="normal">
                         <FormLabel>Do you have time to dedicate to student questions and communication requirements? *</FormLabel>

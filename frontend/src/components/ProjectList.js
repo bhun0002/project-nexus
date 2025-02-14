@@ -59,6 +59,16 @@ const ProjectList = ({ user }) => {
     return (
         <Container maxWidth="md">
             <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
+                 {/* ✅ Back to Project Submission Button */}
+                 <Box display="flex" justifyContent="flex-end" marginBottom={2}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => navigate("/submit")}
+                    >
+                        Back to Project Submission
+                    </Button>
+                </Box>
                 <Typography variant="h4" align="center" gutterBottom>
                     Project List
                 </Typography>
