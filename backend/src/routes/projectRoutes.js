@@ -1,63 +1,40 @@
 const express = require("express");
 const router = express.Router();
 const projectController = require("../controllers/projectController");
-const Project = require("../models/project"); // ✅ Fix: Import Project model
 
-// Create a new project
+/**
+ * @route   POST /api/projects
+ * @desc    Create a new project
+ * @access  Public
+ */
 router.post("/", projectController.createProject);
 
-// // Get all projects
-// router.get("/", projectController.getAllProjects);
+/**
+ * @route   GET /api/projects
+ * @desc    Get all projects for a specific client (filtered by email)
+ * @access  Public
+ */
+router.get("/", projectController.getAllProjects);
 
-// ✅ Get all projects (Filter by client email if provided)
-router.get("/", async (req, res) => {
-    try {
-        const { clientEmail } = req.query; // Get email from query params
-
-        let query = {
-            $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }]
-        };
-
-        if (clientEmail) {
-            query.clientEmail = clientEmail;  // ✅ Filter by client email if provided
-        }
-
-        const projects = await Project.find(query).sort({ createdAt: -1 });
-
-        res.json(projects);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-
-// Get a single project by ID
+/**
+ * @route   GET /api/projects/:id
+ * @desc    Get a single project by its ID
+ * @access  Public
+ */
 router.get("/:id", projectController.getProjectById);
 
-// Update a project by ID
+/**
+ * @route   PUT /api/projects/:id
+ * @desc    Update a project by its ID
+ * @access  Public
+ */
 router.put("/:id", projectController.updateProject);
 
-// // Delete a project by ID
-// router.delete("/:id", projectController.deleteProject);
-
-
-router.delete("/:id", async (req, res) => {
-    try {
-        const project = await Project.findByIdAndUpdate(
-            req.params.id,
-            { isDeleted: true },  // Instead of deleting, update isDelete flag
-            { new: true }  // Return updated document
-        );
-
-        if (!project) {
-            return res.status(404).json({ error: "Project not found" });
-        }
-
-        res.json({ message: "Project marked as deleted" });
-    } catch (error) {
-        console.error("Delete error:", error);
-        res.status(500).json({ error: "Error deleting project" });
-    }
-});
+/**
+ * @route   DELETE /api/projects/:id
+ * @desc    Soft delete a project by setting `isDeleted` flag to true
+ * @access  Public
+ */
+router.delete("/:id", projectController.deleteProject);
 
 module.exports = router;

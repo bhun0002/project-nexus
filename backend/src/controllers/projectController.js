@@ -1,7 +1,10 @@
+const Project = require("../models/project"); // ✅ Ensure correct case for model import
 
-const Project = require("../models/project"); // ✅ Ensure correct case
-
-// Create a new project
+/**
+ * @desc    Create a new project
+ * @route   POST /api/projects
+ * @access  Public
+ */
 exports.createProject = async (req, res) => {
     try {
         const newProject = new Project(req.body);
@@ -12,40 +15,41 @@ exports.createProject = async (req, res) => {
     }
 };
 
-// Get all projects (Only active projects, sorted by newest first) for Each Client
-
-// exports.getAllProjects = async (req, res) => {
-//     try {
-//         const projects = await Project.find({
-//             $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }]
-//         }).sort({ createdAt: -1 });
-
-//         res.json(projects);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
-
+/**
+ * @desc    Fetch all projects for a logged-in client (filtered by email)
+ * @route   GET /api/projects?email=client@example.com
+ * @access  Public
+ */
 exports.getAllProjects = async (req, res) => {
     try {
-        const { email } = req.query;
+        // ✅ Extract email from query parameters
+        const clientEmail = req.query.email;
 
-        if (!email) {
-            return res.status(400).json({ error: "Client is not authorized" });
+        // ✅ Ensure email is provided; otherwise, return an unauthorized error
+        if (!clientEmail) {
+            return res.status(401).json({ error: "Unauthorized: Client email is required." });
         }
 
+        // ✅ Query the database for projects matching the client's email and not deleted
         const projects = await Project.find({
-            clientEmail: email,
-            $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }]
+            clientEmail: clientEmail, // ✅ Ensure filtering is done by client email
+            $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }] // ✅ Exclude deleted projects
         }).sort({ createdAt: -1 });
 
+        // ✅ Return the filtered projects as JSON
         res.json(projects);
     } catch (err) {
+        console.error("❌ Error fetching projects:", err);
         res.status(500).json({ error: err.message });
     }
 };
 
-//  Fetch single project by ID
+
+/**
+ * @desc    Fetch a single project by its ID
+ * @route   GET /api/projects/:id
+ * @access  Public
+ */
 exports.getProjectById = async (req, res) => {
     try {
         const project = await Project.findOne({ _id: req.params.id, isDeleted: false });  // ✅ Exclude deleted projects
@@ -59,7 +63,11 @@ exports.getProjectById = async (req, res) => {
     }
 };
 
-// Update a project by ID
+/**
+ * @desc    Update an existing project by ID
+ * @route   PUT /api/projects/:id
+ * @access  Public
+ */
 exports.updateProject = async (req, res) => {
     try {
         const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -70,13 +78,38 @@ exports.updateProject = async (req, res) => {
     }
 };
 
-// Delete a project by ID
+
+/**
+ * @desc    Soft delete a project by marking `isDeleted` as true
+ * @route   DELETE /api/projects/:id
+ * @access  Public
+ */
 exports.deleteProject = async (req, res) => {
     try {
-        const deletedProject = await Project.findByIdAndDelete(req.params.id);
-        if (!deletedProject) return res.status(404).json({ error: "Project not found" });
-        res.json({ message: "Project deleted successfully" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const project = await Project.findByIdAndUpdate(
+            req.params.id,
+            { isDeleted: true }, // ✅ Instead of deleting, update the `isDeleted` flag
+            { new: true } // ✅ Return the updated document
+        );
+
+        if (!project) {
+            return res.status(404).json({ error: "Project not found" });
+        }
+
+        res.json({ message: "Project marked as deleted" });
+    } catch (error) {
+        console.error("❌ Error deleting project:", error);
+        res.status(500).json({ error: "Error deleting project" });
     }
-};
+}; 
+
+// // Delete a project by ID
+// exports.deleteProject = async (req, res) => {
+//     try {
+//         const deletedProject = await Project.findByIdAndDelete(req.params.id);
+//         if (!deletedProject) return res.status(404).json({ error: "Project not found" });
+//         res.json({ message: "Project deleted successfully" });
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };

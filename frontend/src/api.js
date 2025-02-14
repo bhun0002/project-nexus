@@ -42,14 +42,15 @@ export const login = async (credentials) => {
 // ✅ Fetch only projects belonging to the logged-in client (filtered by email)
 export const fetchProjects = async (clientEmail) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/projects`, { params: { email: clientEmail } });
+        const response = await axios.get(`${API_BASE_URL}/projects`, {
+            params: { email: clientEmail }  // ✅ Ensure correct parameter name
+        });
         return response.data;
     } catch (error) {
         console.error("Error fetching projects:", error.response?.data || error.message);
         throw error.response?.data || { error: "Error fetching projects" };
     }
 };
-
 
 
 // ✅ Fetch a single project by ID
