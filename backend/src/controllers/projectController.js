@@ -12,10 +12,14 @@ exports.createProject = async (req, res) => {
     }
 };
 
-// Get all projects (Only active projects, sorted by newest first)
+// Get all projects (Only active projects, sorted by newest first) for Each Client
+
 // exports.getAllProjects = async (req, res) => {
 //     try {
-//         const projects = await Project.find({ isDeleted: false });
+//         const projects = await Project.find({
+//             $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }]
+//         }).sort({ createdAt: -1 });
+
 //         res.json(projects);
 //     } catch (err) {
 //         res.status(500).json({ error: err.message });
@@ -24,7 +28,14 @@ exports.createProject = async (req, res) => {
 
 exports.getAllProjects = async (req, res) => {
     try {
+        const { email } = req.query;
+
+        if (!email) {
+            return res.status(400).json({ error: "Client is not authorized" });
+        }
+
         const projects = await Project.find({
+            clientEmail: email,
             $or: [{ isDeleted: false }, { isDeleted: { $exists: false } }]
         }).sort({ createdAt: -1 });
 

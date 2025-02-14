@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import ClientInputForm from "./components/ClientInputForm";
@@ -11,7 +11,20 @@ import ProjectDetail from "./components/ProjectDetail"; // ✅ Import Project De
 
 
 function App() {
-  const [user, setUser] = useState(null); // ✅ Store logged-in user details
+
+  const [user, setUser] = useState(() => {
+    // ✅ Restore user from sessionStorage on first render
+    const storedUser = sessionStorage.getItem("loggedInUser");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  // ✅ Ensure `user` is correctly restored after first render
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem("loggedInUser");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <Router>
@@ -27,10 +40,12 @@ function App() {
         <Route path="/submit" element={user ? <ClientInputForm user={user} /> : <Navigate to="/login" />} />
 
         {/* Project List Route */}
-        <Route path="/projects" element={<ProjectList />} />
+        {/* <Route path="/projects" element={<ProjectList />} /> */}
+        {/* ✅ Pass `user` as a prop to `ProjectList` */}
+        <Route path="/projects" element={user ? <ProjectList user={user} /> : <Navigate to="/login" />} />
 
         {/* Project View Route */}
-        <Route path="/project/:id" element={<ProjectDetail />} /> 
+        <Route path="/project/:id" element={<ProjectDetail />} />
 
       </Routes>
       <Footer />

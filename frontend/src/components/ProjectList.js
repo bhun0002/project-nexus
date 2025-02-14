@@ -6,15 +6,36 @@ import {
     Button, TextField, Grid, Box, Tooltip
 } from "@mui/material";
 
-const ProjectList = () => {
+const ProjectList = ({ user }) => {
     const [projects, setProjects] = useState([]);
     const [editProject, setEditProject] = useState(null);
     const [updatedData, setUpdatedData] = useState({ projectName: "", projectDescription: "" });
     const navigate = useNavigate();
 
+    
     useEffect(() => {
-        fetchProjects().then(setProjects).catch(console.error);
-    }, []);
+        // ✅ Restore user from sessionStorage if missing
+        let currentUser = user;
+        if (!currentUser) {
+            const storedUser = sessionStorage.getItem("loggedInUser");
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+            }
+        }
+
+        // ✅ If user is still undefined, redirect to login
+        if (!currentUser || !currentUser.email) {
+            console.error("Client is not authorized. Redirecting to login.");
+            navigate("/login");
+            return;
+        }
+
+        // ✅ Fetch projects for the logged-in user
+        fetchProjects(currentUser.email)
+            .then(setProjects)
+            .catch(console.error);
+    }, [user, navigate]);
+
 
     const handleUpdate = async (id) => {
         try {

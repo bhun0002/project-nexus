@@ -18,7 +18,10 @@ export const signup = async (userData) => {
 export const login = async (credentials) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/auth/login`, credentials);
+        // ✅ Store user email in localStorage after successful login
+        localStorage.setItem("clientEmail", response.data.email);
         return response.data;
+
     } catch (error) {
         console.error("Error logging in:", error.response?.data || error.message);
         throw error.response?.data || { error: "Login failed" };
@@ -26,15 +29,28 @@ export const login = async (credentials) => {
 };
 
 // ✅ Fetch all projects (Only active projects)
-export const fetchProjects = async () => {
+// export const fetchProjects = async () => {
+//     try {
+//         const response = await axios.get(`${API_BASE_URL}/projects`);
+//         return response.data;
+//     } catch (error) {
+//         console.error("Error fetching projects:", error.response?.data || error.message);
+//         throw error.response?.data || { error: "Error fetching projects" };
+//     }
+// };
+
+// ✅ Fetch only projects belonging to the logged-in client (filtered by email)
+export const fetchProjects = async (clientEmail) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/projects`);
+        const response = await axios.get(`${API_BASE_URL}/projects`, { params: { email: clientEmail } });
         return response.data;
     } catch (error) {
         console.error("Error fetching projects:", error.response?.data || error.message);
         throw error.response?.data || { error: "Error fetching projects" };
     }
 };
+
+
 
 // ✅ Fetch a single project by ID
 export const fetchProjectById = async (id) => {

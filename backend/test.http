@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
   "name": "Deval B",
-  "email": "john1@example.com",
+  "email": "john6@example.com",
   "contactNumber": "1234567890",
   "password": "password123",
   "confirmPassword": "password123"
@@ -15,7 +15,7 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "john@example.com",
+  "email": "john6@example.com",
   "password": "password123"
 }
 
@@ -41,12 +41,17 @@ Content-Type: application/json
   "isDeleted": "false"
 }
 
-### 🔹 Get All Projects
-GET http://localhost:5000/api/projects
+# ### 🔹 Get All Projects
+# GET http://localhost:5000/api/projects/
+# Accept: application/json
+
+### 🔹 Get All Projects for Logged-in Client
+GET http://localhost:5000/api/projects?email=devalbhungaliya611122000@gmail.com
 Accept: application/json
 
+
 ### 🔹 Get a Single Project by ID (Replace `PROJECT_ID`)
-GET http://localhost:5000/api/projects/67a4f97179f93bce6c01bf38
+GET http://localhost:5000/api/projects/67aa39dd7c5a5b46897976a1
 Accept: application/json
 
 ### 🔹 Update a Project by ID (Replace `PROJECT_ID`)

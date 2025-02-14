@@ -37,9 +37,12 @@ const Login = ({ setUser }) => {
                 throw new Error("Invalid server response");
             }
 
-            // ✅ Set User Data after successful login
-            setUser({ name: response.name, email: response.email });
+            // ✅ Set User Data after successful login and sessionStorage
+            const loggedInUser = { name: response.name, email: response.email };
 
+            sessionStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+
+            setUser({ name: response.name, email: response.email });
             // ✅ Redirect to Client Input Form
             navigate("/submit");
 
@@ -76,16 +79,16 @@ const Login = ({ setUser }) => {
                 </Typography>
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 15 }}>
 
-                    <TextField 
-                        label="Email" 
-                        name="email" 
-                        type="email" 
-                        variant="outlined" 
-                        fullWidth 
-                        value={formData.email} 
-                        onChange={handleChange} 
-                        error={!!errors.email} 
-                        helperText={errors.email} 
+                    <TextField
+                        label="Email"
+                        name="email"
+                        type="email"
+                        variant="outlined"
+                        fullWidth
+                        value={formData.email}
+                        onChange={handleChange}
+                        error={!!errors.email}
+                        helperText={errors.email}
                     />
 
                     {/* ✅ Updated Password Field with Visibility Toggle */}
@@ -122,9 +125,9 @@ const Login = ({ setUser }) => {
                     {/* ✅ Sign-Up Link for New Users */}
                     <Typography align="center" style={{ marginTop: 10 }}>
                         Don't have an account?{" "}
-                        <Button 
-                            color="primary" 
-                            style={{ fontWeight: "bold", textTransform: "none" }} 
+                        <Button
+                            color="primary"
+                            style={{ fontWeight: "bold", textTransform: "none" }}
                             onClick={handleSignupRedirect}
                         >
                             Sign up here
