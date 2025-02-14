@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { fetchProjects, updateProject, deleteProject } from "../api";
+import { useNavigate } from "react-router-dom";  // ✅ Import for navigation
 import { Container, Paper, Typography, List, ListItem, ListItemText, Button, TextField } from "@mui/material";
 
 const ProjectList = () => {
     const [projects, setProjects] = useState([]);
     const [editProject, setEditProject] = useState(null);
     const [updatedData, setUpdatedData] = useState({ projectName: "", projectDescription: "" });
+    const navigate = useNavigate();  // ✅ Hook for navigation
 
     useEffect(() => {
         fetchProjects().then(setProjects).catch(console.error);
@@ -67,6 +69,14 @@ const ProjectList = () => {
                                         secondary={`${project.projectDescription} - ${project.clientName} (${project.clientEmail})`}
                                     />
                                     <div>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => navigate(`/project/${project._id}`)} // ✅ Navigate to Project Detail Page
+                                            style={{ marginRight: "10px" }}
+                                        >
+                                            View Details
+                                        </Button>
                                         <Button
                                             onClick={() => {
                                                 setEditProject(project._id);

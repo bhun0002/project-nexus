@@ -36,6 +36,18 @@ export const fetchProjects = async () => {
     }
 };
 
+// ✅ Fetch a single project by ID
+export const fetchProjectById = async (id) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/projects/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching project details:", error.response?.data || error.message);
+        throw error.response?.data || { error: "Error fetching project details" };
+    }
+};
+
+
 // ✅ Create a new project
 export const createProject = async (projectData) => {
     try {
