@@ -5,6 +5,7 @@ import {
     Container, Paper, Box, Grid, Link
 } from "@mui/material";
 import { useNavigate } from "react-router-dom"; // ✅ Navigation hook
+import { Logout, ArrowBack } from "@mui/icons-material"; // ✅ Icons for Logout & Navigation
 
 const ClientInputForm = ({ user }) => {
     const navigate = useNavigate();
@@ -63,9 +64,39 @@ const ClientInputForm = ({ user }) => {
         }
     };
 
+    // ✅ Logout Function
+    const handleLogout = () => {
+        sessionStorage.removeItem("loggedInUser");  // ✅ Clear session storage
+        navigate("/login");  // ✅ Redirect to login page
+    };
+
+
     return (
         <Container maxWidth="md">
             <Paper elevation={3} sx={{ padding: "30px", marginTop: "20px", borderRadius: "10px" }}>
+
+
+                {/* 🔹 Top Navigation: Back & Logout */}
+                <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<ArrowBack />}
+                        onClick={() => navigate("/projects")}
+                    >
+                        My Projects
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        color="error"
+                        startIcon={<Logout />}
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </Button>
+                </Box>
+
                 <Typography variant="h4" gutterBottom>
                     Software Development Project Request
                 </Typography>
@@ -182,9 +213,9 @@ const ClientInputForm = ({ user }) => {
 
                     {/* ✅ Buttons */}
                     <Box display="flex" justifyContent="space-between" mt={3}>
-                        <Button variant="outlined" color="secondary" onClick={() => navigate("/projects")}>
+                        {/* <Button variant="outlined" color="secondary" onClick={() => navigate("/projects")}>
                             View My Projects
-                        </Button>
+                        </Button> */}
                         <Button type="submit" variant="contained" color="primary">
                             Submit Project
                         </Button>

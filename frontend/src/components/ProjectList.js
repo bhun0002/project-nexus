@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { fetchProjects, updateProject, deleteProject } from "../api";
 import { useNavigate } from "react-router-dom";
 import {
-    Container, Paper, Typography, List, ListItem, ListItemText,
-    Button, TextField, Grid, Box, Tooltip
+    Container, Paper, Typography, Card, CardContent, CardActions,
+    Button, TextField, Grid, Box, Tooltip, IconButton
 } from "@mui/material";
+import { Edit, Delete, Visibility, Logout, ArrowBack } from "@mui/icons-material";
 
 const ProjectList = ({ user }) => {
     const [projects, setProjects] = useState([]);
@@ -12,9 +13,7 @@ const ProjectList = ({ user }) => {
     const [updatedData, setUpdatedData] = useState({ projectName: "", projectDescription: "" });
     const navigate = useNavigate();
 
-    
     useEffect(() => {
-        // ✅ Restore user from sessionStorage if missing
         let currentUser = user;
         if (!currentUser) {
             const storedUser = sessionStorage.getItem("loggedInUser");
@@ -23,19 +22,21 @@ const ProjectList = ({ user }) => {
             }
         }
 
-        // ✅ If user is still undefined, redirect to login
         if (!currentUser || !currentUser.email) {
             console.error("Client is not authorized. Redirecting to login.");
             navigate("/login");
             return;
         }
 
-        // ✅ Fetch projects for the logged-in user
         fetchProjects(currentUser.email)
             .then(setProjects)
             .catch(console.error);
     }, [user, navigate]);
 
+    const handleLogout = () => {
+        sessionStorage.removeItem("loggedInUser");  // ✅ Clear session storage
+        navigate("/login");  // ✅ Redirect to login page
+    };
 
     const handleUpdate = async (id) => {
         try {
@@ -57,146 +58,97 @@ const ProjectList = ({ user }) => {
     };
 
     return (
-        <Container maxWidth="md">
-            <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
-                 {/* ✅ Back to Project Submission Button */}
-                 <Box display="flex" justifyContent="flex-end" marginBottom={2}>
+        <Container maxWidth="lg">
+            <Paper elevation={3} sx={{ padding: 4, marginTop: 4, borderRadius: "10px" }}>
+                
+                {/* 🔹 Top Navigation: Back & Logout */}
+                <Box display="flex" justifyContent="space-between" marginBottom={2}>
                     <Button
                         variant="contained"
                         color="secondary"
+                        startIcon={<ArrowBack />}
                         onClick={() => navigate("/submit")}
                     >
                         Back to Project Submission
                     </Button>
-                </Box>
-                <Typography variant="h4" align="center" gutterBottom>
-                    Project List
-                </Typography>
-                <List>
-                    {projects.map((project) => (
-                        <ListItem key={project._id} divider sx={{ padding: 2 }}>
-                            {editProject === project._id ? (
-                                <Box sx={{ width: "100%" }}>
-                                    <TextField
-                                        fullWidth
-                                        label="Project Name"
-                                        value={updatedData.projectName}
-                                        onChange={(e) => setUpdatedData({ ...updatedData, projectName: e.target.value })}
-                                        margin="normal"
-                                    />
-                                    <TextField
-                                        fullWidth
-                                        label="Project Description"
-                                        value={updatedData.projectDescription}
-                                        onChange={(e) => setUpdatedData({ ...updatedData, projectDescription: e.target.value })}
-                                        margin="normal"
-                                    />
-                                    <Grid container spacing={2} sx={{ marginTop: 1 }}>
-                                        <Grid item xs={6}>
-                                            <Button fullWidth onClick={() => handleUpdate(project._id)} variant="contained" color="primary">
-                                                Save
-                                            </Button>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Button fullWidth onClick={() => setEditProject(null)} variant="contained" color="secondary">
-                                                Cancel
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                            ) : (
-                                <Grid container alignItems="center" spacing={2} sx={{ width: "100%" }}>
-                                    {/* Left Section - Project Info */}
-                                    <Grid item xs={12} sm={7}>
-                                        <ListItemText
-                                            primary={<Typography variant="h6">{project.projectName}</Typography>}
-                                            secondary={
-                                                <>
-                                                    <Tooltip title={project.projectDescription} arrow>
-                                                        <Typography
-                                                            variant="body2"
-                                                            color="textSecondary"
-                                                            noWrap
-                                                            sx={{
-                                                                maxWidth: "100%",
-                                                                overflow: "hidden",
-                                                                textOverflow: "ellipsis",
-                                                                whiteSpace: "nowrap",
-                                                            }}
-                                                        >
-                                                            {project.projectDescription.length > 100
-                                                                ? `${project.projectDescription.substring(0, 100)}...`
-                                                                : project.projectDescription}
-                                                        </Typography>
-                                                    </Tooltip>
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{
-                                                            fontWeight: "bold",
-                                                            marginTop: 1,
-                                                            color: "gray",
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                            gap: "6px",
-                                                        }}
-                                                    >
-                                                        Client:
-                                                        <Tooltip title={`${project.clientName} (${project.clientEmail})`} arrow>
-                                                            <span
-                                                                style={{
-                                                                    fontWeight: "normal",
-                                                                    maxWidth: "250px",
-                                                                    whiteSpace: "nowrap",
-                                                                    overflow: "hidden",
-                                                                    textOverflow: "ellipsis",
-                                                                    display: "inline-block",
-                                                                    cursor: "pointer",
-                                                                }}
-                                                            >
-                                                                {project.clientName} ({project.clientEmail})
-                                                            </span>
-                                                        </Tooltip>
-                                                    </Typography>
-                                                </>
-                                            }
-                                        />
-                                    </Grid>
 
-                                    {/* Right Section - Buttons */}
-                                    <Grid item xs={12} sm={5} sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            size="small"
-                                            onClick={() => navigate(`/project/${project._id}`)}
-                                        >
-                                            View Details
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="info"
-                                            size="small"
-                                            onClick={() => {
-                                                setEditProject(project._id);
-                                                setUpdatedData({ projectName: project.projectName, projectDescription: project.projectDescription });
+                    <Button
+                        variant="contained"
+                        color="error"
+                        startIcon={<Logout />}
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </Button>
+                </Box>
+
+                <Typography variant="h4" align="center" gutterBottom>
+                    My Projects
+                </Typography>
+
+                <Grid container spacing={3} justifyContent="center">
+                    {projects.map((project) => (
+                        <Grid item xs={12} sm={6} md={4} key={project._id}>
+                            <Card elevation={4} sx={{ borderRadius: "10px" }}>
+                                <CardContent>
+                                    <Typography variant="h6">{project.projectName}</Typography>
+                                    <Tooltip title={project.projectDescription} arrow>
+                                        <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                            sx={{
+                                                maxWidth: "100%",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                whiteSpace: "nowrap",
                                             }}
                                         >
-                                            Edit
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="error"
-                                            size="small"
-                                            onClick={() => handleDelete(project._id)}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            )}
-                        </ListItem>
+                                            {project.projectDescription.length > 100
+                                                ? `${project.projectDescription.substring(0, 100)}...`
+                                                : project.projectDescription}
+                                        </Typography>
+                                    </Tooltip>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            fontWeight: "bold",
+                                            marginTop: 1,
+                                            color: "gray",
+                                        }}
+                                    >
+                                        Client: {project.clientName} ({project.clientEmail})
+                                    </Typography>
+                                </CardContent>
+
+                                <CardActions sx={{ display: "flex", justifyContent: "space-between" }}>
+                                    <IconButton
+                                        color="primary"
+                                        onClick={() => navigate(`/project/${project._id}`)}
+                                    >
+                                        <Visibility />
+                                    </IconButton>
+
+                                    <IconButton
+                                        color="info"
+                                        onClick={() => {
+                                            setEditProject(project._id);
+                                            setUpdatedData({ projectName: project.projectName, projectDescription: project.projectDescription });
+                                        }}
+                                    >
+                                        <Edit />
+                                    </IconButton>
+
+                                    <IconButton
+                                        color="error"
+                                        onClick={() => handleDelete(project._id)}
+                                    >
+                                        <Delete />
+                                    </IconButton>
+                                </CardActions>
+                            </Card>
+                        </Grid>
                     ))}
-                </List>
+                </Grid>
             </Paper>
         </Container>
     );
