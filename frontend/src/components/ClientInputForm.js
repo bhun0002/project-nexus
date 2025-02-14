@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import {
     TextField, Button, Radio, RadioGroup, FormControlLabel,
     FormControl, FormLabel, Select, MenuItem, Typography,
-    Container, Paper, Box 
+    Container, Paper, Box, Grid, Link
 } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // ✅ Navigation hook
 
-
-import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate for navigation
-
-const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
+const ClientInputForm = ({ user }) => {
     const navigate = useNavigate();
 
     // ✅ Initialize form state with user details
@@ -25,7 +23,7 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
         semester: "Winter Term",
     });
 
-    // ✅ Ensure that user details are set when available
+    // ✅ Ensure user details are set when available
     useEffect(() => {
         if (user) {
             setFormData((prev) => ({
@@ -36,7 +34,7 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
         }
     }, [user]);
 
-    // ✅ Handle input change events
+    // ✅ Handle input changes
     const handleChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
@@ -46,7 +44,6 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
         event.preventDefault();
         try {
             const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
-
             const response = await fetch(`${API_BASE_URL}/projects`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -57,9 +54,8 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                 throw new Error("Failed to submit project");
             }
 
-            // ✅ Show confirmation and redirect to projects page
             alert("Project submitted successfully!");
-            navigate("/projects");  // ✅ Redirect after successful submission
+            navigate("/projects");  // ✅ Redirect after submission
 
         } catch (error) {
             console.error("Error submitting form:", error);
@@ -69,18 +65,7 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
 
     return (
         <Container maxWidth="md">
-            <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
-                {/* ✅ "My Projects" Button at the Top */}
-                <Box display="flex" justifyContent="flex-end" marginBottom={2}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => navigate("/projects")}
-                    >
-                        My Projects
-                    </Button>
-                </Box>
-
+            <Paper elevation={3} sx={{ padding: "30px", marginTop: "20px", borderRadius: "10px" }}>
                 <Typography variant="h4" gutterBottom>
                     Software Development Project Request
                 </Typography>
@@ -89,15 +74,22 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                     This form is to gather project details for evaluation. Kindly fill in all
                     required fields to proceed.
                 </Typography>
-                <form onSubmit={handleSubmit}>
 
-                    {/* ✅ Read-Only Client Name & Email */}
-                    <TextField fullWidth label="Client Name" name="clientName" value={formData.clientName} disabled margin="normal" />
-                    <TextField fullWidth label="Client Email Address" type="email" name="clientEmail" value={formData.clientEmail} disabled margin="normal" />
+                <form onSubmit={handleSubmit}>
+                    {/* ✅ Two-column layout for better UX */}
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <TextField fullWidth label="Client Name" name="clientName" value={formData.clientName} disabled margin="normal" />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField fullWidth label="Client Email Address" type="email" name="clientEmail" value={formData.clientEmail} disabled margin="normal" />
+                        </Grid>
+                    </Grid>
 
                     <TextField fullWidth label="Client Company" name="clientCompany" value={formData.clientCompany} onChange={handleChange} required margin="normal" />
                     <TextField fullWidth label="Project Name" name="projectName" value={formData.projectName} onChange={handleChange} required margin="normal" />
 
+                    {/* ✅ Detailed Description Section */}
                     <FormControl fullWidth margin="normal">
                         <TextField
                             label="Description of Project *"
@@ -120,6 +112,7 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                         </Typography>
                     </FormControl>
 
+                    {/* ✅ Commitment Section */}
                     <FormControl component="fieldset" margin="normal">
                         <FormLabel>Do you have time to dedicate to student questions and communication requirements? *</FormLabel>
                         <Typography variant="body2" color="textSecondary">
@@ -135,6 +128,7 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                         </RadioGroup>
                     </FormControl>
 
+                    {/* ✅ Purchasing Required Section */}
                     <FormControl component="fieldset" margin="normal">
                         <FormLabel>Is there any purchasing required for this project?</FormLabel>
                         <RadioGroup row name="purchasingRequired" value={formData.purchasingRequired} onChange={handleChange}>
@@ -146,6 +140,7 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                     {/* Adding a margin to separate the NDA section into a new row */}
                     <div style={{ marginTop: "10px" }}></div>
 
+                    {/* ✅ Students Sign an NDA */}
                     <FormControl component="fieldset" margin="normal">
                         <FormLabel>Will you require that the students sign an NDA? *</FormLabel>
                         <RadioGroup row name="ndaRequired" value={formData.ndaRequired} onChange={handleChange}>
@@ -155,6 +150,7 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                         </RadioGroup>
                     </FormControl>
 
+                    {/* ✅ Showcase Approval with Explanation */}
                     <FormControl component="fieldset" margin="normal">
                         <FormLabel>Would you allow your project to be showcased at our Re/ACTION event at the end of the semester? *</FormLabel>
                         <Typography variant="body2" color="textSecondary">
@@ -172,20 +168,27 @@ const ClientInputForm = ({ user }) => {  // ✅ Receive user details as props
                         </RadioGroup>
                     </FormControl>
 
+                    {/* ✅ Semester Selection */}
                     <FormControl fullWidth margin="normal">
                         <FormLabel>What semester are you looking to get started in?</FormLabel>
                         <Select name="semester" value={formData.semester} onChange={handleChange}>
                             <MenuItem value="As soon as possible">As soon as possible</MenuItem>
-                            <MenuItem value="Winter Term">Winter Term (Jan to Apr)</MenuItem>
-                            <MenuItem value="Spring Term">Spring Term (May to Aug)</MenuItem>
-                            <MenuItem value="Fall Term">Fall Term (Sep to Dec)</MenuItem>
+                            <MenuItem value="Winter Term">Winter Term (Jan - Apr)</MenuItem>
+                            <MenuItem value="Spring Term">Spring Term (May - Aug)</MenuItem>
+                            <MenuItem value="Fall Term">Fall Term (Sep - Dec)</MenuItem>
                             <MenuItem value="Other">Other</MenuItem>
                         </Select>
                     </FormControl>
 
-                    <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: "20px" }}>
-                        SUBMIT PROJECT
-                    </Button>
+                    {/* ✅ Buttons */}
+                    <Box display="flex" justifyContent="space-between" mt={3}>
+                        <Button variant="outlined" color="secondary" onClick={() => navigate("/projects")}>
+                            View My Projects
+                        </Button>
+                        <Button type="submit" variant="contained" color="primary">
+                            Submit Project
+                        </Button>
+                    </Box>
                 </form>
             </Paper>
         </Container>
