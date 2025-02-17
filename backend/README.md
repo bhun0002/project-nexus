@@ -97,3 +97,6 @@ Feel free to open an issue or a pull request for improvements.
 
 ## 📜 License
 This project is open-source and available under the **MIT License**.
+
+📌 **Developed by:** Deval Bhungaliya 
+🔗 **GitHub:** [GitHub Link](https://github.com/bhun0002/project-nexus)
