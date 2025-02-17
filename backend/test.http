@@ -46,7 +46,7 @@ Content-Type: application/json
 # Accept: application/json
 
 ### 🔹 Get All Projects for Logged-in Client
-GET http://localhost:5000/api/projects?email=devalbhungaliya611122000@gmail.com
+GET http://localhost:5000/api/projects?email=bhungaliyadeval@gmail.com
 Accept: application/json
 
 

@@ -5,33 +5,43 @@ This is the **backend** module of Project Nexus, responsible for handling API re
 ## 🚀 Features
 - RESTful API for project management.
 - CRUD operations for projects (Create, Read, Update, Soft Delete).
-- MongoDB integration with **Mongoose**.
-- Environment variable support using **dotenv**.
-- Uses **CORS** for secure API requests from the frontend.
-- API structured with **controllers**, **routes**, and **models**.
+- **MongoDB Database Integration** using Mongoose
+- **Session-based authentication**
+- **Environment variable support** with dotenv.
+- **CORS enabled** for frontend-backend communication
+- **Structured codebase** for scalability 
 
 ## 📁 Project Structure
 ```
 backend/
 │── src/
 │   ├── controllers/
-│   │   ├── projectController.js   # Handles project-related logic
+│   │   ├── authController.js       # Handles authentication
+│   │   ├── projectController.js    # Handles project operations
 │   ├── models/
-│   │   ├── project.js             # Mongoose schema for projects
+│   │   ├── User.js                 # Mongoose schema for users
+│   │   ├── project.js              # Mongoose schema for projects
 │   ├── routes/
-│   │   ├── projectRoutes.js       # Defines API routes
+│   │   ├── authRoutes.js           # Authentication routes
+│   │   ├── projectRoutes.js        # Project routes
 │   ├── database/
-│   │   ├── db.js                  # Database connection setup
-│   ├── server.js                  # Main Express server file
-│   ├── .env                        # Environment variables
-│── package.json                    # Dependencies and scripts
-│── README.md                        # Documentation
+│   │   ├── db.js                   # Database connection setup
+│   ├── middleware/
+│   │   ├── authMiddleware.js        # Authentication middleware (if applicable)
+│   ├── server.js                   # Main Express server file
+│   ├── .env                         # Environment variables
+│── package.json                      # Dependencies and scripts
+│── README.md                         # Documentation
 ```
+
 
 ## 🛠️ Installation & Setup
 
 ### 1️⃣ Prerequisites
-Ensure you have **Node.js**, **MongoDB**, and **npm** installed.
+Ensure you have the following installed on your system:
+- **Node.js** (`v16+ recommended`)
+- **MongoDB** (Running locally on `127.0.0.1:27017`)
+- **npm** (Node Package Manager)
 
 ### 2️⃣ Clone the Repository
 ```bash
@@ -60,13 +70,20 @@ This starts the server on `http://localhost:5000`.
 
 ## 📌 API Endpoints
 
+### 🔹 Authentication
+| Method | Endpoint | Description |
+|--------|---------|-------------|
+| **POST** | `/api/auth/signup` | Register a new user |
+| **POST** | `/api/auth/login` | Authenticate a user and start session |
+
+### 🔹 Project Management
 | Method | Endpoint | Description |
 |--------|---------|-------------|
 | **POST** | `/api/projects` | Create a new project |
-| **GET** | `/api/projects` | Fetch all active projects |
+| **GET** | `/api/projects` | Fetch all projects for the logged-in client |
 | **GET** | `/api/projects/:id` | Get a specific project by ID |
 | **PUT** | `/api/projects/:id` | Update project details |
-| **DELETE** | `/api/projects/:id` | Soft delete (marks `isDeleted: true`) |
+| **DELETE** | `/api/projects/:id` | Soft delete a project (`isDeleted: true`) |
 
 ## ✨ Technologies Used
 - **Node.js** - Runtime environment
