@@ -27,11 +27,11 @@ backend/
 │   ├── database/
 │   │   ├── db.js                   # Database connection setup
 │   ├── middleware/
-│   │   ├── authMiddleware.js        # Authentication middleware (if applicable)
+│   │   ├── authMiddleware.js       # Authentication middleware (if applicable)
 │   ├── server.js                   # Main Express server file
-│   ├── .env                         # Environment variables
-│── package.json                      # Dependencies and scripts
-│── README.md                         # Documentation
+│   ├── .env                        # Environment variables
+│── package.json                    # Dependencies and scripts
+│── README.md                       # Documentation
 ```
 
 

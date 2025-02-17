@@ -27,16 +27,14 @@ frontend/
 │   │   ├── Login.js                # User login page
 │   │   ├── Signup.js               # User signup page
 │   │-- pages/
-│   │   ├── Home.js                 # Homepage
-│   │   ├── Dashboard.js            # User dashboard
 │   │-- api.js                      # API interaction functions
-│   │-- App.js                       # Main App component
-│   │-- index.js                     # Entry point
+│   │-- App.js                      # Main App component
+│   │-- index.js                    # Entry point
 │-- public/
-│-- .env                             # Environment variables
-│-- package.json                     # Dependencies
-│-- README.md                        # Documentation
-│-- .gitignore                        # Ignored files
+│-- .env                            # Environment variables
+│-- package.json                    # Dependencies
+│-- README.md                       # Documentation
+│-- .gitignore                      # Ignored files
 ```
 
 ## 🛠️ Installation & Setup
